@@ -1,2 +1,38 @@
-# spring-user-service
-Educational project using Spring Boot
+# Spring User Service
+
+## Описание
+Образовательный проект с использованием Spring Boot.
+
+Приложение представляет собой REST API для управления пользователями.  
+Позволяет выполнять следующие операции:
+
+- Получение всех пользователей
+- Получение пользователя по ID
+- Создание нового пользователя
+- Обновление существующего пользователя
+- Удаление пользователя
+
+В приложении используется Spring Boot, Spring Web, Spring Data JPA и DTO для передачи данных между слоями. Сущности (`Entity`) не возвращаются напрямую из контроллеров.  
+
+## Структура проекта
+
+| Директория   | Описание                                       | Основные классы               |
+|--------------|------------------------------------------------|-------------------------------|
+| controller/  | REST контроллеры                               | UserController                |
+| service/     | Сервисный слой                                 | UserService                   |
+| repository/  | JPA репозитории                                | UserRepository                |
+| entity/      | JPA сущности                                   | User                          |
+| dto/         | DTO классы                                     | UserDTO, CreateUserDTO        |
+| mapper/      | Преобразование Entity ↔ DTO                    | UserMapper                    |
+| exception/   | Пользовательские исключения и обработка ошибок | -                             |
+
+
+# Технологии
+
+ - Java 17+
+ - Spring Boot
+ - Spring Web
+ - Spring Data JPA
+ - Lombok
+ - PostgerSQL
+ - Maven
