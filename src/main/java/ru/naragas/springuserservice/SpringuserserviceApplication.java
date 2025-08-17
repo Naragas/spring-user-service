@@ -1,4 +1,4 @@
-package ru.naragas.spring_user_service;
+package ru.naragas.springuserservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

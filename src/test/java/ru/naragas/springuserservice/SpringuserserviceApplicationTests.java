@@ -1,4 +1,4 @@
-package ru.naragas.spring_user_service;
+package ru.naragas.springuserservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
