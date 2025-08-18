@@ -161,11 +161,11 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/users/new - Should return new User")
+    @DisplayName("POST /api/users - Should return new User")
     void createUserShouldCreateNewUser() throws Exception {
         when(userService.createUser(any(CreateUserDTO.class))).thenReturn(thirdTestUserDTO);
 
-        mockMvc.perform(post("/api/users/new")
+        mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isCreated())
@@ -183,12 +183,12 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/users/new - Should return Email address already exists if the email address is not unique.")
+    @DisplayName("POST /api/users - Should return Email address already exists if the email address is not unique.")
     void createUserShouldCreateNewUserIfEmailAddressAlreadyExists() throws Exception {
         doThrow(new EmailAlreadyExistsException(notUniqueEmail))
                 .when(userService).createUser(any(CreateUserDTO.class));
 
-        mockMvc.perform(post("/api/users/new")
+        mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDTO)))
                 .andExpect(status().isConflict());
@@ -199,11 +199,11 @@ public class UserControllerTest {
 
 
     @Test
-    @DisplayName("PUT /api/users/update/{id} - Should return user with updated field")
+    @DisplayName("PUT /api/users/{id} - Should return user with updated field")
     void updateUserShouldUpdateFieldAndReturnUser() throws Exception {
         when(userService.updateUser(eq(firstTestUserDTO.getId()), any(UpdateUserDTO.class))).thenReturn(firstTestUserAfterUpdateDTO);
 
-        mockMvc.perform(put("/api/users/update/{id}", firstTestUserDTO.getId())
+        mockMvc.perform(put("/api/users/{id}", firstTestUserDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDTO)))
                 .andExpect(status().isOk())
@@ -218,12 +218,12 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /api/users/update/{id} - Should return User Not Found, when id does not exist in DB")
+    @DisplayName("PUT /api/users/{id} - Should return User Not Found, when id does not exist in DB")
     void updateUserShouldReturnUserNotFoundWhenIdDoesNotExistInDB() throws Exception {
         doThrow(new UserNotFoundException(userIdDoesNotExist))
                 .when(userService).updateUser(eq(userIdDoesNotExist), any(UpdateUserDTO.class));
 
-        mockMvc.perform(put("/api/users/update/{id}", userIdDoesNotExist)
+        mockMvc.perform(put("/api/users/{id}", userIdDoesNotExist)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDTO)))
                 .andExpect(status().isNotFound());
@@ -232,13 +232,13 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /api/users/update/{id} - Should return Email address already exists " +
+    @DisplayName("PUT /api/users/{id} - Should return Email address already exists " +
             "if the email address is not unique.")
     void updateUserShouldUpdateEmailAddressIfEmailAddressAlreadyExistsInDB() throws Exception {
         doThrow(new EmailAlreadyExistsException(notUniqueEmail))
                 .when(userService).updateUser(eq(firstTestUserDTO.getId()), any(UpdateUserDTO.class));
 
-        mockMvc.perform(put("/api/users/update/{id}", firstTestUserDTO.getId())
+        mockMvc.perform(put("/api/users/{id}", firstTestUserDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDTO)))
                 .andExpect(status().isConflict());
@@ -249,22 +249,22 @@ public class UserControllerTest {
 
 
     @Test
-    @DisplayName("DELETE /api/users/delete/{id} - should delete user by id, when id exist in DB")
+    @DisplayName("DELETE /api/users/{id} - should delete user by id, when id exist in DB")
     void deleteUserShouldDeleteUserByIdWhenUserExistInDB() throws Exception {
         doNothing().when(userService).deleteUser(secondTestUserDTO.getId());
 
-        mockMvc.perform(delete("/api/users/delete/{id}", secondTestUserDTO.getId()))
+        mockMvc.perform(delete("/api/users/{id}", secondTestUserDTO.getId()))
                 .andExpect(status().isNoContent());
 
         verify(userService, times(1)).deleteUser(secondTestUserDTO.getId());
     }
 
     @Test
-    @DisplayName("DELETE /api/users/delete/{id} - should return User Not Found, when id does not exist in DB")
+    @DisplayName("DELETE /api/users/{id} - should return User Not Found, when id does not exist in DB")
     void deleteUserShouldReturnUserNotFoundWhenUserDoesNotExistInDB() throws Exception {
         doThrow(new UserNotFoundException(userIdDoesNotExist)).when(userService).deleteUser(userIdDoesNotExist);
 
-        mockMvc.perform(delete("/api/users/delete/{id}", userIdDoesNotExist))
+        mockMvc.perform(delete("/api/users/{id}", userIdDoesNotExist))
                 .andExpect(status().isNotFound());
 
         verify(userService, times(1)).deleteUser(userIdDoesNotExist);

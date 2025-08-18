@@ -2,7 +2,6 @@ package ru.naragas.springuserservice.controller;
 
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.naragas.springuserservice.dto.CreateUserDTO;
@@ -41,19 +40,19 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @PutMapping(value = "/update/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UpdateUserDTO updateUserDTO) {
         UserDTO updatedUser = userService.updateUser(id, updateUserDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PostMapping(value = "/new")
+    @PostMapping()
     public ResponseEntity<UserDTO> createUser(@RequestBody CreateUserDTO createUserDTO) {
         UserDTO createdUser = userService.createUser(createUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
