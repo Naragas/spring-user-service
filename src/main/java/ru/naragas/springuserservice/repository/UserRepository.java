@@ -13,4 +13,5 @@ import ru.naragas.springuserservice.entity.User;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    boolean existsByEmail(String email);
 }

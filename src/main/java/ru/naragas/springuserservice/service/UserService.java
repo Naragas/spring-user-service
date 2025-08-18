@@ -8,6 +8,7 @@ import ru.naragas.springuserservice.dto.CreateUserDTO;
 import ru.naragas.springuserservice.dto.UpdateUserDTO;
 import ru.naragas.springuserservice.dto.UserDTO;
 import ru.naragas.springuserservice.entity.User;
+import ru.naragas.springuserservice.exception.EmailAlreadyExistsException;
 import ru.naragas.springuserservice.exception.UserNotFoundException;
 import ru.naragas.springuserservice.mapper.UserMapper;
 import ru.naragas.springuserservice.repository.UserRepository;
@@ -39,6 +40,8 @@ public class UserService {
     }
 
     public UserDTO createUser(CreateUserDTO createUserDTO) {
+        validateEmailUniqueness(createUserDTO.getEmail());
+
         User user = userMapper.createDTOToEntity(createUserDTO);
         userRepository.save(user);
         return userMapper.entityToDTO(user);
@@ -47,6 +50,8 @@ public class UserService {
     public UserDTO updateUser(int id, UpdateUserDTO updateUserDTO) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        validateEmailUniqueness(updateUserDTO.getEmail(), user);
 
         user.setName(updateUserDTO.getName());
         user.setEmail(updateUserDTO.getEmail());
@@ -61,5 +66,28 @@ public class UserService {
             throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
+    }
+
+    /**
+     * Проверяет, что email уникален при создании нового пользователя.
+     * Выбрасывает EmailAlreadyExistsException, если такой email уже есть в базе.
+     */
+    private void validateEmailUniqueness(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
+    }
+
+    /**
+     * Проверяет, что email уникален при обновлении пользователя.
+     * Выбрасывает EmailAlreadyExistsException, если другой пользователь уже имеет такой email.
+     *
+     * @param email новый email для проверки
+     * @param updatedUser текущий пользователь, которого обновляем
+     */
+    private void validateEmailUniqueness(String email, User updatedUser) {
+        if (!(updatedUser.getEmail().equals(email)) && userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
     }
 }
