@@ -4,12 +4,15 @@ package ru.naragas.springuserservice.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import ru.naragas.springuserservice.UserEventType;
 import ru.naragas.springuserservice.dto.CreateUserDTO;
 import ru.naragas.springuserservice.dto.UpdateUserDTO;
 import ru.naragas.springuserservice.dto.UserDTO;
+import ru.naragas.springuserservice.dto.UserEventDTO;
 import ru.naragas.springuserservice.entity.User;
 import ru.naragas.springuserservice.exception.EmailAlreadyExistsException;
 import ru.naragas.springuserservice.exception.UserNotFoundException;
+import ru.naragas.springuserservice.kafka.UserEventProducer;
 import ru.naragas.springuserservice.mapper.UserMapper;
 import ru.naragas.springuserservice.repository.UserRepository;
 
@@ -24,6 +27,7 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserEventProducer userEventProducer;
     private final UserMapper userMapper;
 
     public List<UserDTO> getAllUsers() {
@@ -44,6 +48,7 @@ public class UserService {
 
         User user = userMapper.createDTOToEntity(createUserDTO);
         userRepository.save(user);
+        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.CreateUser.name(), user.getEmail()));
         return userMapper.entityToDTO(user);
     }
 
@@ -65,7 +70,9 @@ public class UserService {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
         }
+        String userEmail = userRepository.findById(id).get().getEmail();
         userRepository.deleteById(id);
+        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.DeleteUser.name(), userEmail));
     }
 
     /**
