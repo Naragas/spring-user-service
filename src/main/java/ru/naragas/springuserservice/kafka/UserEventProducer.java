@@ -1,6 +1,5 @@
 package ru.naragas.springuserservice.kafka;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import ru.naragas.springuserservice.dto.UserEventDTO;
  * @version 1.0
  * @created 8/18/2025
  */
+
 @Service
 @AllArgsConstructor
 public class UserEventProducer {

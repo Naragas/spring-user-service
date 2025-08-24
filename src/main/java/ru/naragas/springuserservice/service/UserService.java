@@ -4,7 +4,7 @@ package ru.naragas.springuserservice.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import ru.naragas.springuserservice.UserEventType;
+import ru.naragas.springuserservice.dto.UserEventType;
 import ru.naragas.springuserservice.dto.CreateUserDTO;
 import ru.naragas.springuserservice.dto.UpdateUserDTO;
 import ru.naragas.springuserservice.dto.UserDTO;
@@ -48,7 +48,7 @@ public class UserService {
 
         User user = userMapper.createDTOToEntity(createUserDTO);
         userRepository.save(user);
-        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.CreateUser.name(), user.getEmail()));
+        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.CREATE_USER, user.getEmail()));
         return userMapper.entityToDTO(user);
     }
 
@@ -72,7 +72,7 @@ public class UserService {
         }
         String userEmail = userRepository.findById(id).get().getEmail();
         userRepository.deleteById(id);
-        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.DeleteUser.name(), userEmail));
+        userEventProducer.sendUserEvent(new UserEventDTO(UserEventType.DELETE_USER, userEmail));
     }
 
     /**

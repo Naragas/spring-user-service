@@ -13,6 +13,6 @@ import lombok.*;
 @Getter @Setter
 @ToString
 public class UserEventDTO {
-    private String eventType;
+    private UserEventType eventType;
     private String email;
 }
