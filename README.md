@@ -53,7 +53,26 @@
 - Удаляет пользователя по ID
 - Возвращает `404 Not Found`, если ID не существует
 
-# Технологии
+## Документация API (Swagger / Springdoc OpenAPI)
+
+- Подключена зависимость **springdoc-openapi-starter-webmvc-ui**.  
+- Swagger автоматически сканирует все контроллеры и формирует спецификацию OpenAPI.  
+- Веб-интерфейс для тестирования и изучения API доступен по адресу:  
+  [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  
+- Для каждого метода описаны параметры, коды ответов, примеры DTO.  
+- Добавлены аннотации `@Operation`, `@ApiResponse`, `@Schema` и др. для более понятной документации.  
+
+
+## HATEOAS (Hypermedia as the Engine of Application State)
+
+- Подключён **spring-boot-starter-hateoas**.  
+- Ответы API теперь содержат ссылки для навигации по ресурсам:  
+  - `self` → ссылка на самого пользователя;  
+  - `users` → ссылка на список всех пользователей;  
+  - `update` → ссылка на обновление пользователя;  
+  - `delete` → ссылка на удаление пользователя.  
+
+## Технологии
 
  - Java 17+
  - Spring Boot
