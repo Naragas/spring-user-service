@@ -22,8 +22,6 @@ import ru.naragas.springuserservice.dto.UserDTO;
 import ru.naragas.springuserservice.service.UserService;
 
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Naragas
